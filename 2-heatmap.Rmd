@@ -1,6 +1,6 @@
 ---
 title: "Data Exploration in R"
-subtitle: "Counts and Tables"
+subtitle: "Heatmaps for categorical and discrete Variables"
 author: "Prof. Dr. Jan Kirenz"
 institute: "HdM Stuttgart"
 output:
@@ -32,11 +32,14 @@ library(kableExtra)
 
 ---
 
-## Counts and Tables
+## Heatmap
+
+- In this presentation you will learn how to perform data exploration using heatmaps with the function [geom_bin2d()](https://ggplot2.tidyverse.org/reference/geom_bin2d.html) from the ggplot2 package. 
+
 
 <div class = "blue">
 
-You should use counts and tables if the variable is: 
+You can use this kind of heatmap if the variable is: 
 
 <p>
 
@@ -46,20 +49,9 @@ You should use counts and tables if the variable is:
 </div>
 
 
-In this section you will learn how to perform data exploration using counts and tables (also called contingeny tables). 
 
 ---
 
-## Libraries
-
-To use the code in this presentation, activate the following packages: 
-
-```{r}
-library(tidyverse)
-library(gt)
-```
-
----
 
 ## Data
 
@@ -77,295 +69,64 @@ wage_df <- read_csv("https://raw.githubusercontent.com/kirenz/datasets/master/wa
 
 
 ---
+class: center, middle
 
-## Data
 
+```{r heat-plot, echo=FALSE, fig.cap="Simple Heatmap", out.width = "60%"}
 
-.pull-left[
+wage_df %>%
+  ggplot(aes(jobclass, education)) +
+  geom_bin2d() +
+  scale_fill_gradient(low = "gray85", high = "steelblue") 
 
-* **year**: Year that wage information was recorded
-
-* **age**: Age of worker
-
-* **maritl**: A factor with levels: 
-
- 1. Never Married 
- 2. Married 
- 3. Widowed 
- 4. Divorced and 
- 5. Separated indicating marital status
-
-* **race**: A factor with levels: 
-
- 1. White 
- 2. Black 
- 3. Asian and 
- 4. Other indicating race
-
-]
-
-.pull-right[
-
-* **education**: A factor with levels: 
-
- 1. < HS Grad 
- 2. HS Grad 
- 3. Some College 
- 4. College Grad and 
- 5. Advanced Degree indicating education level
-
-* **jobclass**: A factor with levels: 
-
- 1. Industrial and 
- 2. Information indicating type of job
-
-* **logwage**: Log of workers wage
-
-* **wage**: Workers raw wage
-
-]
+```
 
 ---
 
-## Count
+## Heatmap
 
+```{r heat-code, eval=FALSE}
 
-.pull-left[
-
-* Use data `wage_df`.
-* Perform [count()](https://dplyr.tidyverse.org/reference/count.html) on `maritl` 
-* Sort the values. 
-* Use [gt()](https://gt.rstudio.com) to print the table.
-
-]
-
-.pull-right[
-
-```{r count-one, include = FALSE}
-
-wage_df %>% 
-  count(maritl,
-        sort = TRUE) %>% 
-  gt()
+wage_df %>%
+  ggplot(aes(jobclass, education)) +
+  geom_bin2d() + #<<
+  scale_fill_gradient(low = "gray85", high = "steelblue") 
 
 ```
 
-
-```{r count-one-color, echo=FALSE}
-
-decorate("count-one") %>%
-  mask("wage_df") %>%
-  mask("count") %>%
-  mask("maritl") %>%
-  mask("sort") %>%
-  mask("gt") %>%
-  knit_print.with_flair()
-
-```
-]
+- `geom_bin2d()` divides the plane into rectangles, counts the number of cases in each rectangle, and then (by default) maps the number of cases to the rectangle's fill.
 
 ---
 
-## Count
-
-.pull-left[
-
-* Use data `wage_df`.
-* Perform [count()](https://dplyr.tidyverse.org/reference/count.html) on `maritl` and `education`
-* Sort the values. 
-* Use [gt()](https://gt.rstudio.com) to print the table.
-
-]
-
-.pull-right[
-
-Count the combined appearences of `maritl` and `education` and sort the values:
-
-```{r count-two, include=FALSE}
-
-wage_df %>% 
-  count(maritl, education,
-        sort= TRUE) %>% 
-  gt()
-
-```
+class: center, middle
 
 
-```{r count-two-color, echo=FALSE}
+```{r heat-2-plot, echo=FALSE, fig.cap="Heatmap with some adjustments", out.width = "60%"}
 
-decorate("count-two") %>%
-  mask("wage_df") %>%
-  mask("count") %>%
-  mask("maritl") %>%
-  mask("education") %>%
-  mask("sort") %>%
-  mask("gt") %>%
-  knit_print.with_flair()
-
-```
-
-]
----
-
-## Count
-
-.pull-left[
-
-* Use data `wage_df`.
-* Obtain the sum of the quantitative variable `wage` for the different levels of `maritl`
-* Name the new variable "Sum". 
-* Use gt() to print the table.
-
-Read the [documentation for count()](https://dplyr.tidyverse.org/reference/count.html) to learn how to perform this task.
-]
-
-.pull-right[
-
-```{r count-numeric, include=FALSE}
-
-wage_df %>%  
-  count(maritl,
-        wt = wage,
-        name = "Sum") %>% 
-  gt()
-
-```
-
-```{r count-numeric-color, echo=FALSE}
-
-decorate("count-numeric") %>%
-  mask("wage_df") %>%
-  mask("count") %>%
-  mask("maritl") %>%
-  mask("wt") %>%
-  mask("name") %>%
-  mask("gt") %>%
-  knit_print.with_flair()
-
-```
-
-
-]
----
-
-## Total counts
-
-
-
-* Total counts are an useful way to represent the observations that fall into each combination of the levels of categorical variables. 
-
-* We create a contingency table of the two categorical variables `jobclass` and `race` and call the result `tab`:
-
-
-
-```{r tab}
-
-tab <- table(wage_df$jobclass, wage_df$race)
-
-kable(tab)
+wage_df %>%
+  ggplot(aes(jobclass, education)) +
+  geom_bin2d(binwidth = c(1, 1), alpha = 0.8) + 
+  theme_classic() + 
+  scale_fill_gradient(low = "gray85", high = "steelblue") +
+  labs(fill = "Workers", y = "Education", x = "Job class")
 
 ```
 
 
 ---
 
-## Joint proportions
+## Heatmap with some adjustments
 
-* We can also view the percentage of each cell in relation to the total amount of all observations (here n = 3000). 
+```{r heat-2-code, eval=FALSE}
 
-* Therefore, you have to simply divide the numbers from our total counts with 3.000.
-
-The following code generates tables of *joint* proportions:
-
-```{r prop-tab}
-
-prop <- prop.table(tab)*100
-
-kable(prop, digits = 2)
+wage_df %>%
+  ggplot(aes(jobclass, education)) +
+  geom_bin2d(binwidth = c(1, 1), alpha = 0.8) + #<<
+  theme_classic() + 
+  scale_fill_gradient(low = "gray85", high = "steelblue") +
+  labs(fill = "Workers", y = "Education", x = "Job class")
 
 ```
-
-
-For example, around around  .red[`________`]  % of all people in the dataset are white industrial workers.
-
-???
-
-44%
-
----
-
-## Conditional proportions
-
-- You also may want to know the probability that workers have a certain jobclass, given that they have a particular ethnical background. 
-
-- This is a so called **conditional probability**. 
-
-- Conditional probability represents the chance that one event will occur given that a second event has already occurred. 
-
-
----
-
-## Conditional proportions
-
-
-* The following code generates tables of *conditional* proportions:
-
-```{r prop-tab-col}
-
-# conditional on columns
-prop_col <- prop.table(tab, 2)*100  
-
-kable(prop_col, digits = 2)
-
-```
-
-
-
-We performed a columnwise evaluation and are now able to answer the following question: 
-
-* Approximately what proportion of all white workers are industrial workers? The answer is: around  .red[`________`]  %.
-
-???
-
-53%
-
----
-
-## Conditional proportions: rows
-
-Now we want to obtain the probability that workers have a certain race, given their jobclass. 
-
-
-```{r prop-tab-row}
-
-# conditional on rows
-prop.table(tab, 1)  
-
-```
-
-We performed a rowwise evaluation and are now able to answer the following question: 
-
-* Approximately what proportion of all industrial workers are white? 
-* The answer is: around  .red[`________`]  %.
-
-???
-
-86%
-
----
-
-## Chi-squared Test of Independence
-
-Finally, let's test the hypothesis whether the variable `jobclass` is independent of the variable `race` at .05 significance level.
-
-
-```{r chi-sq}
-
-chisq.test(tab)  
-
-```
-
-As the p-value is smaller than the .05 significance level, we reject the null hypothesis that the jobclass is independent of the race of the workers. 
 
 ---
 

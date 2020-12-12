@@ -1,6 +1,6 @@
 ---
 title: "Data Exploration in R"
-subtitle: "Counts, Tables and Heatmaps"
+subtitle: "Counts and Tables"
 author: "Prof. Dr. Jan Kirenz"
 institute: "HdM Stuttgart"
 output:
