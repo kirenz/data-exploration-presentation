@@ -1,6 +1,6 @@
 ---
 title: "Data Exploration in R"
-subtitle: "Heatmaps for categorical and discrete Variables"
+subtitle: "Heatmaps"
 author: "Prof. Dr. Jan Kirenz"
 institute: "HdM Stuttgart"
 output:
@@ -34,7 +34,7 @@ library(kableExtra)
 
 ## Heatmap
 
-- In this presentation you will learn how to perform data exploration using heatmaps with the function [geom_bin2d()](https://ggplot2.tidyverse.org/reference/geom_bin2d.html) from the ggplot2 package. 
+- In this presentation you will learn how to perform data exploration using heatmaps. 
 
 
 <div class = "blue">
@@ -43,11 +43,11 @@ You can use this kind of heatmap if the variable is:
 
 <p>
 
-- Categorical or  <br>
-- discrete with only a few values.
+- Categorical,  <br>
+- discrete with only a few values or <br>
+- continuous
 
 </div>
-
 
 
 ---
@@ -69,7 +69,11 @@ wage_df <- read_csv("https://raw.githubusercontent.com/kirenz/datasets/master/wa
 
 
 ---
-class: center, middle
+
+## Two categorical variables
+
+- Heatmaps for categorical and discrete Variables 
+- We use the function [geom_bin2d()](https://ggplot2.tidyverse.org/reference/geom_bin2d.html) from the ggplot2 package.
 
 
 ```{r heat-plot, echo=FALSE, fig.cap="Simple Heatmap", out.width = "60%"}
@@ -77,20 +81,24 @@ class: center, middle
 wage_df %>%
   ggplot(aes(jobclass, education)) +
   geom_bin2d() +
-  scale_fill_gradient(low = "gray85", high = "steelblue") 
+  scale_fill_gradient(low = "gray85", high = "steelblue") +
+  labs(fill = "Workers", y = "Education", x = "Job class") +
+  theme_classic() 
 
 ```
 
 ---
 
-## Heatmap
+## Two categorical variables
 
 ```{r heat-code, eval=FALSE}
 
 wage_df %>%
   ggplot(aes(jobclass, education)) +
   geom_bin2d() + #<<
-  scale_fill_gradient(low = "gray85", high = "steelblue") 
+  scale_fill_gradient(low = "gray85", high = "steelblue") +
+  labs(fill = "Workers", y = "Education", x = "Job class") +
+  theme_classic() 
 
 ```
 
@@ -98,35 +106,39 @@ wage_df %>%
 
 ---
 
-class: center, middle
+## Combination of Variables
+
+- Interactive heatmap using [`plotly`](https://plotly.com/r/)
+- Combination of categorical and continous   variables
 
 
-```{r heat-2-plot, echo=FALSE, fig.cap="Heatmap with some adjustments", out.width = "60%"}
+```{r}
 
-wage_df %>%
-  ggplot(aes(jobclass, education)) +
-  geom_bin2d(binwidth = c(1, 1), alpha = 0.8) + 
-  theme_classic() + 
-  scale_fill_gradient(low = "gray85", high = "steelblue") +
-  labs(fill = "Workers", y = "Education", x = "Job class")
+wage_df %>% 
+  ggplot(aes(jobclass, education, fill = wage )) +
+  geom_tile() +
+  scale_fill_gradient(low = "gray85", high = "steelblue")  +
+  theme_classic()
 
 ```
-
 
 ---
 
-## Heatmap with some adjustments
+```{r}
+library(plotly)
 
-```{r heat-2-code, eval=FALSE}
+p <- 
+  wage_df %>% 
+  ggplot(aes(jobclass, education, fill = wage )) +
+  geom_tile() +
+  scale_fill_gradient(low = "gray85", high = "steelblue")  +
+  theme_classic()
 
-wage_df %>%
-  ggplot(aes(jobclass, education)) +
-  geom_bin2d(binwidth = c(1, 1), alpha = 0.8) + #<<
-  theme_classic() + 
-  scale_fill_gradient(low = "gray85", high = "steelblue") +
-  labs(fill = "Workers", y = "Education", x = "Job class")
+ggplotly(p)
 
 ```
+
+
 
 ---
 
