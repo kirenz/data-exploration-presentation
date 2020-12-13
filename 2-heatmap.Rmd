@@ -124,6 +124,8 @@ wage_df %>%
 
 ---
 
+## Interactive heatmap
+
 ```{r}
 library(plotly)
 
@@ -137,7 +139,6 @@ p <-
 ggplotly(p)
 
 ```
-
 
 
 ---
