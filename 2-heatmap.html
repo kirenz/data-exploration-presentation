@@ -14,7 +14,7 @@
 class: center, middle, title-slide
 
 # Data Exploration in R
-## Heatmaps for categorical and discrete Variables
+## Heatmaps
 ### Prof. Dr. Jan Kirenz
 ### HdM Stuttgart
 
@@ -30,7 +30,7 @@ layout: true
 
 ## Heatmap
 
-- In this presentation you will learn how to perform data exploration using heatmaps with the function [geom_bin2d()](https://ggplot2.tidyverse.org/reference/geom_bin2d.html) from the ggplot2 package. 
+- In this presentation you will learn how to perform data exploration using heatmaps. 
 
 
 &lt;div class = "blue"&gt;
@@ -39,11 +39,11 @@ You can use this kind of heatmap if the variable is:
 
 &lt;p&gt;
 
-- Categorical or  &lt;br&gt;
-- discrete with only a few values.
+- Categorical,  &lt;br&gt;
+- discrete with only a few values or &lt;br&gt;
+- continuous
 
 &lt;/div&gt;
-
 
 
 ---
@@ -65,7 +65,11 @@ wage_df &lt;- read_csv("https://raw.githubusercontent.com/kirenz/datasets/master
 
 
 ---
-class: center, middle
+
+## Two categorical variables
+
+- Heatmaps for categorical and discrete Variables 
+- We use the function [geom_bin2d()](https://ggplot2.tidyverse.org/reference/geom_bin2d.html) from the ggplot2 package.
 
 
 &lt;div class="figure"&gt;
@@ -75,44 +79,48 @@ class: center, middle
 
 ---
 
-## Heatmap
+## Two categorical variables
 
 
 ```r
 wage_df %&gt;%
   ggplot(aes(jobclass, education)) +
 * geom_bin2d() +
-  scale_fill_gradient(low = "gray85", high = "steelblue") 
+  scale_fill_gradient(low = "gray85", high = "steelblue") +
+  labs(fill = "Workers", y = "Education", x = "Job class") +
+  theme_classic() 
 ```
 
 - `geom_bin2d()` divides the plane into rectangles, counts the number of cases in each rectangle, and then (by default) maps the number of cases to the rectangle's fill.
 
 ---
 
-class: center, middle
+## Combination of Variables
+
+- Combination of categorical and continous   variables
 
 
-&lt;div class="figure"&gt;
-&lt;img src="2-heatmap_files/figure-html/heat-2-plot-1.png" alt="Heatmap with some adjustments" width="60%" /&gt;
-&lt;p class="caption"&gt;Heatmap with some adjustments&lt;/p&gt;
-&lt;/div&gt;
-
+&lt;img src="2-heatmap_files/figure-html/unnamed-chunk-2-1.png" width="60%" /&gt;
 
 ---
 
-## Heatmap with some adjustments
+
+## Combination of Variables
+
+- Combination of categorical and continous   variables
+
 
 
 ```r
-wage_df %&gt;%
-  ggplot(aes(jobclass, education)) +
-* geom_bin2d(binwidth = c(1, 1), alpha = 0.8) +
-  theme_classic() + 
-  scale_fill_gradient(low = "gray85", high = "steelblue") +
-  labs(fill = "Workers", y = "Education", x = "Job class")
+wage_df %&gt;% 
+  ggplot(aes(jobclass, education, fill = wage )) +
+  geom_tile() +
+  scale_fill_gradient(low = "gray85", high = "steelblue")  +
+  theme_classic()
 ```
 
 ---
+
 
 class: center, middle
 

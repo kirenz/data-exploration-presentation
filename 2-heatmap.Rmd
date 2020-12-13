@@ -108,11 +108,10 @@ wage_df %>%
 
 ## Combination of Variables
 
-- Interactive heatmap using [`plotly`](https://plotly.com/r/)
 - Combination of categorical and continous   variables
 
 
-```{r}
+```{r, echo = FALSE, out.width = "60%"}
 
 wage_df %>% 
   ggplot(aes(jobclass, education, fill = wage )) +
@@ -124,24 +123,24 @@ wage_df %>%
 
 ---
 
-## Interactive heatmap
 
-```{r}
-library(plotly)
+## Combination of Variables
 
-p <- 
-  wage_df %>% 
+- Combination of categorical and continous   variables
+
+
+```{r, eval = FALSE}
+
+wage_df %>% 
   ggplot(aes(jobclass, education, fill = wage )) +
   geom_tile() +
   scale_fill_gradient(low = "gray85", high = "steelblue")  +
   theme_classic()
 
-ggplotly(p)
-
 ```
 
-
 ---
+
 
 class: center, middle
 
