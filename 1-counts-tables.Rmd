@@ -20,7 +20,7 @@ layout: true
 ```{r setup, include=FALSE}
 
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 300)
+knitr::opts_chunk$set(cache = FALSE, warning = FALSE, message = FALSE, dpi = 300)
 
 library(tidyverse)
 library(gt)
@@ -285,6 +285,8 @@ prop <- prop.table(tab)*100
 
 kable(prop, digits = 2)
 
+prop
+
 ```
 
 
@@ -341,7 +343,9 @@ Now we want to obtain the probability that workers have a certain race, given th
 ```{r prop-tab-row}
 
 # conditional on rows
-prop.table(tab, 1)  
+prop_rows <- prop.table(tab, 1)  
+
+kable(prop_rows, digits = 2)
 
 ```
 
@@ -354,16 +358,14 @@ We performed a rowwise evaluation and are now able to answer the following quest
 
 86%
 
----
-
-## Chi-squared Test of Independence
+Chi-squared Test of Independence
 
 Finally, let's test the hypothesis whether the variable `jobclass` is independent of the variable `race` at .05 significance level.
 
 
 ```{r chi-sq}
 
-chisq.test(tab)  
+#chisq.test(tab)  
 
 ```
 
